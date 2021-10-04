@@ -1,7 +1,6 @@
 import pygame
 import numpy as np
 import sys
-from time import sleep
 from typing import Union
 
 from numpy import ndarray
@@ -38,7 +37,7 @@ def mark_cell(board: ndarray, row: int, column: int, player: int) -> None:
     board[row][column] = player
 
 
-def is_cell_available(board: ndarray, row: int, column: int) -> bool:
+def cell_is_available(board: ndarray, row: int, column: int) -> bool:
     return board[row][column] == 0
 
 
@@ -48,6 +47,33 @@ def board_is_full(board: ndarray) -> bool:
             if board[row][column] == 0:
                 return False
     return True
+
+
+def player_won(board: ndarray) -> bool:
+    count = 0
+    for row in range(BOARD_ROWS):
+        for column in range(BOARD_COLUMNS-1):
+            count += board[row][column] == board[row][column+1]
+            if count == 3:
+                return True
+    count = 0
+    for column in range(BOARD_COLUMNS):
+        for row in range(BOARD_ROWS-1):
+            count += board[row][column] == board[row+1][column]
+            if count == 3:
+                return True
+    count = 0
+    for row in range(BOARD_ROWS-2):
+        count += board[row][row] == board[row+1][row+1]
+        if count == 3:
+            return True
+        break
+    count = 0
+    for row in range(BOARD_ROWS-2):
+        count += board[row][BOARD_COLUMNS-row-1] == board[row+1][BOARD_COLUMNS-row-2]
+        if count == 3:
+            return True
+    return False
 
 
 def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, player: int):
@@ -101,9 +127,11 @@ def main_loop():
                 mouse_y = event.pos[1]
                 clicked_row = int(mouse_y//(HEIGHT/BOARD_ROWS))
                 clicked_column = int(mouse_x//(WIDTH/BOARD_COLUMNS))
-                if is_cell_available(board, clicked_row, clicked_column):
+                if cell_is_available(board, clicked_row, clicked_column):
                     mark_cell(board, clicked_row, clicked_column, player_turn)
                     draw_marker(screen, clicked_row, clicked_column, player_turn)
+                    if player_won(board):
+                        print(f'Player{player_turn} has won')
                     player_turn = 1 if player_turn == 2 else 2
                 print(board)
         pygame.display.update()
