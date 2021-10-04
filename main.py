@@ -54,20 +54,30 @@ def is_board_full(board: ndarray) -> bool:
 
 def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, player: int):
     player -= 1
-    xi = column * WIDTH / BOARD_COLUMNS
-    yi = row * HEIGHT / BOARD_ROWS
-    xe = (column + 1) * WIDTH / BOARD_COLUMNS
-    ye = (row + 1) * HEIGHT / BOARD_ROWS
-    pygame.draw.line(surface,
-                     PLAYER_COLOR[player],
-                     (xi, yi),
-                     (xe, ye),
-                     LINE_WIDTH)
-    pygame.draw.line(surface,
-                     PLAYER_COLOR[player],
-                     (xe, yi),
-                     (xi, ye),
-                     LINE_WIDTH)
+    if player == 1:
+        left = column * WIDTH / BOARD_COLUMNS
+        top = row * HEIGHT / BOARD_ROWS
+        width = WIDTH / BOARD_COLUMNS
+        height = HEIGHT / BOARD_ROWS
+        pygame.draw.ellipse(surface,
+                            PLAYER_COLOR[player],
+                            (left, top, width, height),
+                            LINE_WIDTH)
+    else:
+        xi = column * WIDTH / BOARD_COLUMNS
+        yi = row * HEIGHT / BOARD_ROWS
+        xe = (column + 1) * WIDTH / BOARD_COLUMNS
+        ye = (row + 1) * HEIGHT / BOARD_ROWS
+        pygame.draw.line(surface,
+                         PLAYER_COLOR[player],
+                         (xi, yi),
+                         (xe, ye),
+                         LINE_WIDTH)
+        pygame.draw.line(surface,
+                         PLAYER_COLOR[player],
+                         (xe, yi),
+                         (xi, ye),
+                         LINE_WIDTH)
 
 
 def main_loop():
