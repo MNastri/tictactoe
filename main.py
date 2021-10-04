@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 import sys
-
+from time import sleep
 from typing import Union
 
 from numpy import ndarray
@@ -43,7 +43,7 @@ def is_cell_available(board: ndarray, row: int, column: int) -> bool:
     return board[row][column] == 0
 
 
-def is_board_full(board: ndarray) -> bool:
+def board_is_full(board: ndarray) -> bool:
     for row in range(BOARD_ROWS):
         for column in range(BOARD_COLUMNS):
             if board[row][column] == 0:
@@ -82,24 +82,22 @@ def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, pla
 def main_loop():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    screen.fill(BG_COLOR)
     pygame.display.set_caption('Tic Tac Toe')
+    screen.fill(BG_COLOR)
     draw_playing_grid(screen)
     board = np.zeros((BOARD_ROWS, BOARD_COLUMNS))
-
-    """
-    # test
-    is_board_full(board)
-    mark_cell(board, 0, 0, 1)
-    print(board)
-    # end test
-    """
     player_turn = 1
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
+                if board_is_full(board):
+                    screen.fill(BG_COLOR)
+                    draw_playing_grid(screen)
+                    board = np.zeros((BOARD_ROWS, BOARD_COLUMNS))
+                    player_turn = 1
+                    continue
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
                 clicked_row = int(mouse_y//(HEIGHT/BOARD_ROWS))
