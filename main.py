@@ -1,5 +1,8 @@
 import pygame
 import sys
+from typing import Union
+
+from pygame.surface import SurfaceType
 
 WIDTH = 600
 HEIGHT = 600
@@ -11,7 +14,7 @@ LINE_COLOR = (23, 145, 135)
 LINE_WIDTH = 15
 
 
-def draw_playing_grid(surface) -> None:
+def draw_playing_grid(surface: Union[pygame.Surface, SurfaceType]) -> None:
     for ii in range(1, 3):
         pygame.draw.line(surface,
                          LINE_COLOR,
