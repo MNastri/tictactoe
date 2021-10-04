@@ -1,5 +1,6 @@
-def main_loop:
+def main_loop():
     pass
 
-if __name__ == __main__:
-    main_loop
+
+if __name__ == "__main__":
+    main_loop()
