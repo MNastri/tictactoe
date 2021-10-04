@@ -16,6 +16,8 @@ BOARD_COLUMNS = 3
 RED = (255, 0, 0)
 BG_COLOR = (28, 170, 156)
 LINE_COLOR = (23, 145, 135)
+PLAYER_COLOR = [(84, 84, 84), (242, 235, 212)]
+
 
 LINE_WIDTH = 15
 
@@ -50,6 +52,24 @@ def is_board_full(board: ndarray) -> bool:
     return True
 
 
+def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, player: int):
+    player -= 1
+    xi = column * WIDTH / BOARD_COLUMNS
+    yi = row * HEIGHT / BOARD_ROWS
+    xe = (column + 1) * WIDTH / BOARD_COLUMNS
+    ye = (row + 1) * HEIGHT / BOARD_ROWS
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xi, yi),
+                     (xe, ye),
+                     LINE_WIDTH)
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xe, yi),
+                     (xi, ye),
+                     LINE_WIDTH)
+
+
 def main_loop():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -77,6 +97,7 @@ def main_loop():
                 clicked_column = int(mouse_x//(WIDTH/BOARD_COLUMNS))
                 if is_cell_available(board, clicked_row, clicked_column):
                     mark_cell(board, clicked_row, clicked_column, player_turn)
+                    draw_marker(screen, clicked_row, clicked_column, player_turn)
                     player_turn = 1 if player_turn == 2 else 2
                 print(board)
         pygame.display.update()
