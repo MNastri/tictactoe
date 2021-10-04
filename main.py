@@ -8,6 +8,7 @@ HEIGHT = 600
 def main_loop():
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
+    pygame.display.set_caption('Tic Tac Toe')
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
