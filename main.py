@@ -3,6 +3,8 @@ import numpy as np
 import sys
 
 from typing import Union
+
+from numpy import ndarray
 from pygame.surface import SurfaceType
 
 WIDTH = 600
@@ -32,15 +34,15 @@ def draw_playing_grid(surface: Union[pygame.Surface, SurfaceType]) -> None:
                          LINE_WIDTH)
 
 
-def mark_cell(board, row, column, player):
+def mark_cell(board: ndarray, row: int, column: int, player: int) -> None:
     board[row][column] = player
 
 
-def is_cell_available(board, row, column) -> bool:
+def is_cell_available(board: ndarray, row: int, column: int) -> bool:
     return board[row][column] == 0
 
 
-def is_board_full(board) -> bool:
+def is_board_full(board: ndarray) -> bool:
     for row in range(BOARD_ROWS):
         for column in range(BOARD_COLUMNS):
             if board[row][column] == 0:
