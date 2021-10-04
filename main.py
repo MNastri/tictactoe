@@ -18,7 +18,6 @@ BG_COLOR = (28, 170, 156)
 LINE_COLOR = (23, 145, 135)
 PLAYER_COLOR = [(84, 84, 84), (242, 235, 212)]
 
-
 LINE_WIDTH = 15
 
 
@@ -55,10 +54,10 @@ def is_board_full(board: ndarray) -> bool:
 def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, player: int):
     player -= 1
     if player == 1:
-        left = column * WIDTH / BOARD_COLUMNS
-        top = row * HEIGHT / BOARD_ROWS
-        width = WIDTH / BOARD_COLUMNS
-        height = HEIGHT / BOARD_ROWS
+        left = int(column * WIDTH / BOARD_COLUMNS)
+        top = int(row * HEIGHT / BOARD_ROWS)
+        width = int(WIDTH / BOARD_COLUMNS)
+        height = int(HEIGHT / BOARD_ROWS)
         pygame.draw.ellipse(surface,
                             PLAYER_COLOR[player],
                             (left, top, width, height),
