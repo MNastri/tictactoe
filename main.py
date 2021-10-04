@@ -1,8 +1,8 @@
 import pygame
 import numpy as np
 import sys
-from typing import Union
 
+from typing import Union
 from pygame.surface import SurfaceType
 
 WIDTH = 600
