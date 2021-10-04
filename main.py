@@ -49,34 +49,102 @@ def board_is_full(board: ndarray) -> bool:
     return True
 
 
-def draw_winning_line(surface: Union[Surface, SurfaceType], type: int, player, int) -> bool:
-    pass
+def draw_horizontal_line(surface: Union[Surface, SurfaceType], row: int, player: int) -> None:
+    player -= 1
+    xi = 0
+    yi = (row + 0.5) * HEIGHT / BOARD_ROWS
+    xe = WIDTH
+    ye = (row + 0.5) * HEIGHT / BOARD_ROWS
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xi, yi),
+                     (xe, ye),
+                     LINE_WIDTH)
 
 
-def player_won(board: ndarray, player: int) -> bool:
+def draw_vertical_line(surface: Union[Surface, SurfaceType], column: int, player: int) -> None:
+    player -= 1
+    xi = (column+0.5) * WIDTH / BOARD_COLUMNS
+    yi = 0
+    xe = (column+0.5) * WIDTH / BOARD_COLUMNS
+    ye = HEIGHT
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xi, yi),
+                     (xe, ye),
+                     LINE_WIDTH)
+
+
+def draw_desc_diag_line(surface: Union[Surface, SurfaceType], player: int) -> None:
+    player -= 1
+    xi = 0
+    yi = 0
+    xe = WIDTH
+    ye = HEIGHT
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xi, yi),
+                     (xe, ye),
+                     LINE_WIDTH)
+
+
+def draw_asc_diag_line(surface: Union[Surface, SurfaceType], player: int) -> None:
+    player -= 1
+    xi = 0
+    yi = HEIGHT
+    xe = WIDTH
+    ye = 0
+    pygame.draw.line(surface,
+                     PLAYER_COLOR[player],
+                     (xi, yi),
+                     (xe, ye),
+                     LINE_WIDTH)
+
+
+def draw_winning_line(surface: Union[Surface, SurfaceType], code: int, player: int) -> None:
+    func = {0: draw_horizontal_line,
+            1: draw_vertical_line,
+            2: draw_desc_diag_line,
+            3: draw_asc_diag_line}
+    pp, ss = divmod(int(code), 10)
+    if pp == 0 or pp == 1:
+        func.get(pp)(surface, ss, player)
+    else:
+        func.get(pp)(surface, player)
+
+
+def player_won(board: ndarray, player: int) -> tuple[bool, int]:
     for row in range(BOARD_ROWS):
         count = 0
         for column in range(BOARD_COLUMNS):
             count += 1 if player == board[row][column] else 0
         if count == 3:
-            return True
+            code = 0+row
+            return True, code
+
     for column in range(BOARD_COLUMNS):
         count = 0
         for row in range(BOARD_ROWS):
             count += 1 if player == board[row][column] else 0
         if count == 3:
-            return True
+            code = 10+column
+            return True, code
+
     count = 0
     for row in range(BOARD_ROWS):
         count += 1 if player == board[row][row] else 0
         if count == 3:
-            return True
+            code = 20
+            return True, code
+
     count = 0
     for row in range(BOARD_ROWS):
         count += 1 if player == board[row][2-row] else 0
         if count == 3:
-            return True
-    return False
+            code = 30
+            return True, code
+
+    return False, -1
 
 
 def draw_marker(surface: Union[Surface, SurfaceType], row: int, column: int, player: int):
@@ -115,16 +183,18 @@ def main_loop():
     draw_playing_grid(screen)
     board = np.zeros((BOARD_ROWS, BOARD_COLUMNS))
     player_turn = 1
+    won = False
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if board_is_full(board):
+                if board_is_full(board) or won:
                     screen.fill(BG_COLOR)
                     draw_playing_grid(screen)
                     board = np.zeros((BOARD_ROWS, BOARD_COLUMNS))
                     player_turn = 1
+                    won = False
                     continue
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
@@ -135,8 +205,10 @@ def main_loop():
                 if cell_is_available(board, clicked_row, clicked_column):
                     mark_cell(board, clicked_row, clicked_column, player_turn)
                     draw_marker(screen, clicked_row, clicked_column, player_turn)
-                    if player_won(board, player_turn):
+                    won, code = player_won(board, player_turn)
+                    if won:
                         print(f'Player{player_turn} has won')
+                        draw_winning_line(screen, code, player_turn)
                     player_turn = 1 if player_turn == 2 else 2
                 print(board)
         pygame.display.update()
