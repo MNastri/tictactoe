@@ -63,47 +63,22 @@ def main_loop():
     is_board_full(board)
     mark_cell(board, 0, 0, 1)
     print(board)
-
-    is_board_full(board)
-    mark_cell(board, 0, 1, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 0, 2, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 1, 0, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 1, 1, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 1, 2, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 2, 0, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 2, 1, 1)
-    print(board)
-
-    is_board_full(board)
-    mark_cell(board, 2, 2, 1)
-    print(board)
-
-    is_board_full(board)
     # end test
     """
-
+    player_turn = 1
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_x = event.pos[0]
+                mouse_y = event.pos[1]
+                clicked_row = int(mouse_y//(HEIGHT/BOARD_ROWS))
+                clicked_column = int(mouse_x//(WIDTH/BOARD_COLUMNS))
+                if is_cell_available(board, clicked_row, clicked_column):
+                    mark_cell(board, clicked_row, clicked_column, player_turn)
+                    player_turn = 1 if player_turn == 2 else 2
+                print(board)
         pygame.display.update()
 
 
