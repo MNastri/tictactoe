@@ -49,28 +49,31 @@ def board_is_full(board: ndarray) -> bool:
     return True
 
 
-def player_won(board: ndarray) -> bool:
-    count = 0
+def draw_winning_line(surface: Union[Surface, SurfaceType], type: int, player, int) -> bool:
+    pass
+
+
+def player_won(board: ndarray, player: int) -> bool:
     for row in range(BOARD_ROWS):
-        for column in range(BOARD_COLUMNS-1):
-            count += board[row][column] == board[row][column+1]
-            if count == 3:
-                return True
-    count = 0
-    for column in range(BOARD_COLUMNS):
-        for row in range(BOARD_ROWS-1):
-            count += board[row][column] == board[row+1][column]
-            if count == 3:
-                return True
-    count = 0
-    for row in range(BOARD_ROWS-2):
-        count += board[row][row] == board[row+1][row+1]
+        count = 0
+        for column in range(BOARD_COLUMNS):
+            count += 1 if player == board[row][column] else 0
         if count == 3:
             return True
-        break
+    for column in range(BOARD_COLUMNS):
+        count = 0
+        for row in range(BOARD_ROWS):
+            count += 1 if player == board[row][column] else 0
+        if count == 3:
+            return True
     count = 0
-    for row in range(BOARD_ROWS-2):
-        count += board[row][BOARD_COLUMNS-row-1] == board[row+1][BOARD_COLUMNS-row-2]
+    for row in range(BOARD_ROWS):
+        count += 1 if player == board[row][row] else 0
+        if count == 3:
+            return True
+    count = 0
+    for row in range(BOARD_ROWS):
+        count += 1 if player == board[row][2-row] else 0
         if count == 3:
             return True
     return False
@@ -132,7 +135,7 @@ def main_loop():
                 if cell_is_available(board, clicked_row, clicked_column):
                     mark_cell(board, clicked_row, clicked_column, player_turn)
                     draw_marker(screen, clicked_row, clicked_column, player_turn)
-                    if player_won(board):
+                    if player_won(board, player_turn):
                         print(f'Player{player_turn} has won')
                     player_turn = 1 if player_turn == 2 else 2
                 print(board)
