@@ -125,8 +125,10 @@ def main_loop():
                     continue
                 mouse_x = event.pos[0]
                 mouse_y = event.pos[1]
-                clicked_row = int(mouse_y//(HEIGHT/BOARD_ROWS))
-                clicked_column = int(mouse_x//(WIDTH/BOARD_COLUMNS))
+                row_height = HEIGHT/BOARD_ROWS
+                column_width = WIDTH/BOARD_COLUMNS
+                clicked_row = int(mouse_y//row_height)
+                clicked_column = int(mouse_x//column_width)
                 if cell_is_available(board, clicked_row, clicked_column):
                     mark_cell(board, clicked_row, clicked_column, player_turn)
                     draw_marker(screen, clicked_row, clicked_column, player_turn)
